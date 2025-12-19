@@ -1,4 +1,3 @@
--- Services
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
@@ -8,85 +7,63 @@ local PlayerGui = player:WaitForChild("PlayerGui")
 local SAVE_FILE = "kick_ui_pos.txt"
 local THEME_FILE = "kick_ui_theme.txt"
 
--- Cleanup old UI
 pcall(function()
 	PlayerGui:FindFirstChild("DeltaKickUI"):Destroy()
 end)
 
--- ===== ScreenGui & Main Frame =====
 local gui = Instance.new("ScreenGui")
 gui.Name = "DeltaKickUI"
 gui.ResetOnSpawn = false
 gui.Parent = PlayerGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 260, 0, 140)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+frame.Size = UDim2.new(0,200,0,110)
+frame.BackgroundColor3 = Color3.fromRGB(30,30,35)
 frame.BorderSizePixel = 0
 frame.Parent = gui
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0,16)
 
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 18)
-
--- Shadow
-local shadow = Instance.new("ImageLabel")
-shadow.AnchorPoint = Vector2.new(0.5, 0.5)
-shadow.Position = UDim2.new(0.5, 0, 0.5, 4)
-shadow.Size = UDim2.new(1, 28, 1, 28)
-shadow.BackgroundTransparency = 1
-shadow.Image = "rbxassetid://1316045217"
-shadow.ImageTransparency = 0.75
-shadow.ScaleType = Enum.ScaleType.Slice
-shadow.SliceCenter = Rect.new(10, 10, 118, 118)
-shadow.Parent = frame
-shadow.ZIndex = frame.ZIndex - 1
-
--- Gradient
 local gradient = Instance.new("UIGradient")
 gradient.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 45)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 25, 30))
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(40,40,45)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(25,25,30))
 }
 gradient.Parent = frame
 
--- Title
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -20, 0, 32)
-title.Position = UDim2.new(0, 10, 0, 8)
-title.BackgroundTransparency = 1
-title.Text = "Session Controls"
-title.Font = Enum.Font.GothamSemibold
-title.TextSize = 16
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.TextColor3 = Color3.fromRGB(230, 230, 230)
-title.Parent = frame
-
--- Kick Button
 local kickBtn = Instance.new("TextButton")
-kickBtn.Size = UDim2.new(1, -20, 0, 42)
-kickBtn.Position = UDim2.new(0, 10, 0, 50)
-kickBtn.Text = "Leave Game"
+kickBtn.Size = UDim2.new(1,-20,0,40)
+kickBtn.Position = UDim2.new(0,10,0,20)
+kickBtn.Text = "Kick"
 kickBtn.Font = Enum.Font.GothamBold
 kickBtn.TextSize = 15
-kickBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-kickBtn.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
+kickBtn.TextColor3 = Color3.fromRGB(255,255,255)
+kickBtn.BackgroundColor3 = Color3.fromRGB(220,60,60)
 kickBtn.BorderSizePixel = 0
 kickBtn.Parent = frame
-Instance.new("UICorner", kickBtn).CornerRadius = UDim.new(0, 14)
+Instance.new("UICorner", kickBtn).CornerRadius = UDim.new(0,14)
 
--- Theme Toggle
-local themeBtn = Instance.new("TextButton")
-themeBtn.Size = UDim2.new(1, -20, 0, 28)
-themeBtn.Position = UDim2.new(0, 10, 0, 100)
-themeBtn.Text = "Toggle Light/Dark"
-themeBtn.Font = Enum.Font.GothamSemibold
-themeBtn.TextSize = 14
-themeBtn.TextColor3 = Color3.fromRGB(230, 230, 230)
-themeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
-themeBtn.BorderSizePixel = 0
-themeBtn.Parent = frame
-Instance.new("UICorner", themeBtn).CornerRadius = UDim.new(0, 10)
+local discordLabel = Instance.new("TextLabel")
+discordLabel.Size = UDim2.new(1,-20,0,20)
+discordLabel.Position = UDim2.new(0,10,0,65)
+discordLabel.BackgroundTransparency = 1
+discordLabel.Text = "discord.gg/A5BjXj6Kkf"
+discordLabel.Font = Enum.Font.GothamBold
+discordLabel.TextSize = 14
+discordLabel.TextColor3 = Color3.fromRGB(180,180,180)
+discordLabel.TextScaled = false
+discordLabel.TextWrapped = true
+discordLabel.TextXAlignment = Enum.TextXAlignment.Center
+discordLabel.Parent = frame
 
--- ===== Load Saved Position =====
+local toggleBtn = Instance.new("ImageButton")
+toggleBtn.Size = UDim2.new(0,24,0,24)
+toggleBtn.Position = UDim2.new(1,-28,0,4)
+toggleBtn.BackgroundTransparency = 1
+toggleBtn.Parent = frame
+
+local ICON_SUN = "rbxassetid://12948413735"
+local ICON_MOON = "rbxassetid://12948414321"
+
 local function loadPos()
 	if readfile and isfile and isfile(SAVE_FILE) then
 		local d = readfile(SAVE_FILE)
@@ -99,21 +76,20 @@ local function loadPos()
 			return
 		end
 	end
-	frame.Position = UDim2.new(0.5, -130, 0.7, 0)
+	frame.Position = UDim2.new(0.5, -100, 0.7, 0)
 end
 
 local function savePos()
 	if writefile then
 		local p = frame.Position
 		writefile(SAVE_FILE, table.concat({
-			p.X.Scale, p.X.Offset, p.Y.Scale, p.Y.Offset
-		}, ","))
+			p.X.Scale,p.X.Offset,p.Y.Scale,p.Y.Offset
+		},","))
 	end
 end
 
 loadPos()
 
--- ===== Dragging =====
 local dragging, dragStart, startPos
 frame.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
@@ -123,7 +99,6 @@ frame.InputBegan:Connect(function(input)
 		startPos = frame.Position
 	end
 end)
-
 frame.InputEnded:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
 	or input.UserInputType == Enum.UserInputType.Touch then
@@ -131,73 +106,52 @@ frame.InputEnded:Connect(function(input)
 		savePos()
 	end
 end)
-
 UIS.InputChanged:Connect(function(input)
 	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
 	or input.UserInputType == Enum.UserInputType.Touch) then
 		local delta = input.Position - dragStart
 		frame.Position = UDim2.new(
 			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
+			startPos.X.Offset+delta.X,
 			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
+			startPos.Y.Offset+delta.Y
 		)
 	end
 end)
 
--- ===== Button Animations =====
-local hoverTweenKick = TweenService:Create(
-	kickBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(200, 50, 50)}
-)
-local normalTweenKick = TweenService:Create(
-	kickBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(220, 60, 60)}
-)
-kickBtn.InputBegan:Connect(function() hoverTweenKick:Play() end)
-kickBtn.InputEnded:Connect(function() normalTweenKick:Play() end)
+local hoverTween = TweenService:Create(kickBtn, TweenInfo.new(0.15), {BackgroundColor3=Color3.fromRGB(200,50,50)})
+local normalTween = TweenService:Create(kickBtn, TweenInfo.new(0.15), {BackgroundColor3=Color3.fromRGB(220,60,60)})
+kickBtn.InputBegan:Connect(function() hoverTween:Play() end)
+kickBtn.InputEnded:Connect(function() normalTween:Play() end)
+kickBtn.Activated:Connect(function() player:Kick("You pressed the kick button.") end)
 
--- ===== Kick Action =====
-kickBtn.Activated:Connect(function()
-	player:Kick("You chose to leave the session.")
-end)
-
--- ===== Theme Logic =====
 local theme = "Dark"
 local function applyTheme(t)
-	if t == "Dark" then
-		frame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
-		gradient.Color = ColorSequence.new{
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 45)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 25, 30))
-		}
-		title.TextColor3 = Color3.fromRGB(230, 230, 230)
-		kickBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-		kickBtn.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
-		themeBtn.TextColor3 = Color3.fromRGB(230, 230, 230)
-		themeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
-	else -- Light
-		frame.BackgroundColor3 = Color3.fromRGB(240, 240, 245)
-		gradient.Color = ColorSequence.new{
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(250, 250, 250)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(225, 225, 230))
-		}
-		title.TextColor3 = Color3.fromRGB(30, 30, 35)
-		kickBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-		kickBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-		themeBtn.TextColor3 = Color3.fromRGB(30, 30, 35)
-		themeBtn.BackgroundColor3 = Color3.fromRGB(200, 200, 210)
+	if t=="Dark" then
+		frame.BackgroundColor3 = Color3.fromRGB(30,30,35)
+		gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.fromRGB(40,40,45)),ColorSequenceKeypoint.new(1,Color3.fromRGB(25,25,30))}
+		kickBtn.BackgroundColor3 = Color3.fromRGB(220,60,60)
+		kickBtn.TextColor3 = Color3.fromRGB(255,255,255)
+		toggleBtn.Image = ICON_MOON
+		discordLabel.TextColor3 = Color3.fromRGB(180,180,180)
+	else
+		frame.BackgroundColor3 = Color3.fromRGB(240,240,245)
+		gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0,Color3.fromRGB(250,250,250)),ColorSequenceKeypoint.new(1,Color3.fromRGB(225,225,230))}
+		kickBtn.BackgroundColor3 = Color3.fromRGB(200,50,50)
+		kickBtn.TextColor3 = Color3.fromRGB(255,255,255)
+		toggleBtn.Image = ICON_SUN
+		discordLabel.TextColor3 = Color3.fromRGB(100,100,100)
 	end
 end
 
--- Load saved theme
 if readfile and isfile and isfile(THEME_FILE) then
 	local t = readfile(THEME_FILE)
-	if t == "Light" or t == "Dark" then theme = t end
+	if t=="Light" or t=="Dark" then theme = t end
 end
 applyTheme(theme)
 
--- Theme toggle button
-themeBtn.Activated:Connect(function()
-	if theme == "Dark" then theme = "Light" else theme = "Dark" end
+toggleBtn.Activated:Connect(function()
+	if theme=="Dark" then theme="Light" else theme="Dark" end
 	applyTheme(theme)
-	if writefile then writefile(THEME_FILE, theme) end
+	if writefile then writefile(THEME_FILE,theme) end
 end)
