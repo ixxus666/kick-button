@@ -123,7 +123,7 @@ local hoverTween = TweenService:Create(kickBtn, TweenInfo.new(0.15), {Background
 local normalTween = TweenService:Create(kickBtn, TweenInfo.new(0.15), {BackgroundColor3=Color3.fromRGB(220,60,60)})
 kickBtn.InputBegan:Connect(function() hoverTween:Play() end)
 kickBtn.InputEnded:Connect(function() normalTween:Play() end)
-kickBtn.Activated:Connect(function() player:Kick("You pressed the kick button.") end)
+kickBtn.Activated:Connect(function() player:Kick("Kick Was Successful.") end)
 
 local theme = "Dark"
 local function applyTheme(t)
